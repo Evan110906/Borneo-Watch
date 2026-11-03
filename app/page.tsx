@@ -114,6 +114,25 @@ export default function Home() {
 	const [isAdmin, setIsAdmin] = useState(false);
 
 	useEffect(() => {
+		const showSearchAlert = () => window.alert("Fitur ini masih 'Under Construction' karena BorneoWatch saat ini adalah versi demo.");
+		const handleSearchClick = (event: MouseEvent) => {
+			if (event.target instanceof Element && event.target.closest(".global-search")) showSearchAlert();
+		};
+		const handleSearchKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Enter" && event.target instanceof Element && event.target.closest(".global-search")) {
+				event.preventDefault();
+				showSearchAlert();
+			}
+		};
+		document.addEventListener("click", handleSearchClick, true);
+		document.addEventListener("keydown", handleSearchKeyDown, true);
+		return () => {
+			document.removeEventListener("click", handleSearchClick, true);
+			document.removeEventListener("keydown", handleSearchKeyDown, true);
+		};
+	}, []);
+
+	useEffect(() => {
 		const client = getSupabaseBrowserClient();
 		if (client) {
 			let active = true;
@@ -399,7 +418,7 @@ export default function Home() {
 		</aside>
 		<div className="main-shell"><header className="topbar"><button className="icon-button mobile-menu" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Open navigation"><Menu size={19} /></button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14} /><strong>{section}</strong></div><div className="top-actions"><label className="global-search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search reports, places..." aria-label="Search reports and places" /><kbd>⌘ K</kbd></label><span className="demo-chip"><span />{isSupabaseConfigured() ? "SUPABASE" : "DEMO MODE"}</span><div className="popover-wrap"><button className="icon-button" onClick={() => setNotificationOpen(!notificationOpen)} aria-label="Notifications"><Bell size={18} /><i className="notification-dot" /></button>{notificationOpen && <div className="popover notification-popover"><strong>Activity</strong><p><span className="tiny-dot green" /> {isSupabaseConfigured() ? "Database connection is configured." : "Demo data is loaded for exploration."}</p><p><span className="tiny-dot gold" /> Community reports are not automatically verified.</p></div>}</div><button className="icon-button theme-toggle" onClick={() => setDarkMode(!darkMode)} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>{darkMode ? <Sun size={18} /> : <Moon size={18} />}</button><div className="popover-wrap"><button className="profile-button" onClick={() => setProfileOpen(!profileOpen)} aria-expanded={profileOpen}><span className="avatar small">{authUser?.email?.slice(0, 2).toUpperCase() ?? "BW"}</span><ChevronDown size={14} /></button>{profileOpen && <div className="popover profile-popover"><strong>{authUser?.user_metadata.display_name ?? authUser?.email ?? "Demo explorer"}</strong><span className="muted">{authUser ? "Registered user" : "Visitor · demo access"}</span><button onClick={() => authUser ? void signOut() : (setProfileOpen(false), setAuthOpen(true))}>{authUser ? "Sign out" : "Sign in or create account"}<ArrowRight size={14} /></button></div>}</div></div></header>
 			<main className="page-content">
-				{section === "Overview" && <Overview reports={reports} onNavigate={goTo} onReport={() => setReportOpen(true)} onSelectReport={setSelectedReport} />}
+				{section === "Overview" && <Overview reports={reports} onNavigate={goTo} onReport={() => window.alert("Fitur ini masih 'Under Construction' karena BorneoWatch saat ini adalah versi demo.")} onSelectReport={setSelectedReport} />}
 				{section === "Forest Map" && <MapSection reports={visibleReports} onReport={() => setReportOpen(true)} />}
 				{section === "Community Reports" && <ReportsSection reports={visibleReports} filter={reportFilter} setFilter={(value) => { setReportFilter(value); setReportPage(0); }} page={reportPage} setPage={setReportPage} onReport={() => setReportOpen(true)} onExport={exportCsv} onSelect={setSelectedReport} />}
 				{section === "Biodiversity" && <BiodiversitySection items={filteredSpecies} query={speciesQuery} setQuery={setSpeciesQuery} filter={speciesFilter} setFilter={setSpeciesFilter} />}
